@@ -47,6 +47,7 @@ public partial class QuanZi_ScanInfo : System.Web.UI.Page
         course.Enabled = false; course.BorderStyle = BorderStyle.None;
         email.Enabled = false; email.BorderStyle = BorderStyle.None;
         Save.Visible = false;
+
     }
     /// <summary>
     /// 获取选中的博客代码
@@ -162,12 +163,12 @@ public partial class QuanZi_ScanInfo : System.Web.UI.Page
     }
     protected void ModifyMessage_Click(object sender, EventArgs e)
     {
-        name.Enabled = true; name.BorderStyle = BorderStyle.NotSet;
-        sex.Enabled = true; sex.BorderStyle = BorderStyle.NotSet;
+        name.Enabled = false; name.BorderStyle = BorderStyle.NotSet;
+        sex.Enabled = false; sex.BorderStyle = BorderStyle.NotSet;
         tel.Enabled = true; tel.BorderStyle = BorderStyle.NotSet;
         address.Enabled = true; address.BorderStyle = BorderStyle.NotSet;
         course.Enabled = true; course.BorderStyle = BorderStyle.NotSet;
-        email.Enabled = true; email.BorderStyle = BorderStyle.NotSet;
+        email.Enabled = false; email.BorderStyle = BorderStyle.NotSet;
         Save.Visible = true;
     }
 
@@ -175,21 +176,22 @@ public partial class QuanZi_ScanInfo : System.Web.UI.Page
     {
         using (DataClassesDataContext db = new DataClassesDataContext())
         {
-            User user = db.User.SingleOrDefault<User>(s => s.UserID == Session["UserID"]);
+            var user = db.User.SingleOrDefault<User>(s => s.UserID == Session["UserID"]);
             if (user == null) return;
 
             user.Name = name.Text;
             user.Sex = sex.Text;
             user.Email = email.Text;
 
-            QuanZi quanzi = db.QuanZi.SingleOrDefault<QuanZi>(s => s.QuanZiID == Int16.Parse(Session["QuanZiID"].ToString()));
+            var quanzi = db.QuanZi.SingleOrDefault<QuanZi>(s => s.QuanZiID == Int16.Parse(Session["QuanZiID"].ToString()));
             if (quanzi == null) return;
+
             quanzi.CreatorCourse = course.Text;
             quanzi.CreatorAddress = address.Text;
             quanzi.CreatorTel = tel.Text;
-
             db.SubmitChanges();
         }
+
         name.Enabled = false; name.BorderStyle = BorderStyle.None;
         sex.Enabled = false; sex.BorderStyle = BorderStyle.None;
         tel.Enabled = false; tel.BorderStyle = BorderStyle.None;
@@ -197,6 +199,7 @@ public partial class QuanZi_ScanInfo : System.Web.UI.Page
         course.Enabled = false; course.BorderStyle = BorderStyle.None;
         email.Enabled = false; email.BorderStyle = BorderStyle.None;
         Save.Visible = false;
+        Response.Redirect("ScanInfo.aspx");
     }
 
     protected void Add_onclick(object sender, EventArgs e)
